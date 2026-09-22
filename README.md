@@ -4,7 +4,7 @@ Personal academic website of Tammaro Terracciano, Assistant Professor of Finance
 
 Live at <https://tammaroterracciano.github.io>.
 
-Plain HTML and CSS. No framework, no build step, no JavaScript. GitHub Pages serves the files in this repository exactly as they are, from the `main` branch. Committing a change publishes it, usually within a minute.
+Plain HTML and CSS. No framework, no build step, no JavaScript, and no third-party requests: every asset, including the font, is served from this repository. GitHub Pages serves the files in this repository exactly as they are, from the `main` branch. Committing a change publishes it, usually within a minute.
 
 ---
 
@@ -19,6 +19,8 @@ Plain HTML and CSS. No framework, no build step, no JavaScript. GitHub Pages ser
 | `assets/photo.jpg` | Portrait shown on the home page |
 | `assets/photo_original.jpg` | Uncropped original, unused by the site |
 | `assets/Terracciano_CV.pdf` | The CV linked from the bio |
+| `assets/fonts/SourceSerif4-Variable.woff2` | Source Serif 4, self-hosted. One variable file, all weights |
+| `assets/fonts/OFL.txt` | SIL Open Font License 1.1, covering the font above |
 
 ---
 
@@ -119,13 +121,42 @@ Two further blocks below redefine these for dark mode. **Change all of them**, o
 
 ### Change the font
 
-The site uses one typeface, Source Serif 4, from Google Fonts:
+The site uses one typeface, Source Serif 4, **self-hosted** from `assets/fonts/`. It is not loaded from Google Fonts, and must not be: see Privacy below.
+
+The family is named in `style.css`:
 
 ```css
 --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
 ```
 
-Changing it also requires editing the `<link href="https://fonts.googleapis.com/...">` line in **both** HTML files.
+and the file itself is declared by the `@font-face` block at the very top of `style.css`. One variable file covers every weight the site uses (400, 500, 600, 700), so there is nothing to add when you start using a new weight in that range.
+
+To swap in a different typeface:
+
+1. Put the new `.woff2` in `assets/fonts/`, with its licence file.
+2. Point the `src:` in the `@font-face` block at it and set `font-family` to the new name.
+3. Update `--serif` in `:root` to match.
+4. Check the `unicode-range` still covers the characters the site uses. The current value is Google's standard Latin subset, which covers English plus the accents in the Italian titles.
+
+There is no `<link>` tag to edit. The HTML files reference no fonts at all.
+
+---
+
+## Privacy
+
+The site sets no cookies, runs no analytics, and contacts no third party. Both pages carry this line in the footer:
+
+> This site sets no cookies, runs no analytics, and makes no third-party requests &mdash; nothing about your visit is collected.
+
+**That statement has to stay true.** Before adding anything, check it does not break it:
+
+- **No remote fonts.** The font is self-hosted precisely for this reason. Loading it from Google Fonts sends every visitor's IP address to Google on every page view; an earlier version of this site did that.
+- **No CDNs.** Do not pull CSS, JavaScript, or icons from jsdelivr, unpkg, cdnjs or similar. Copy the file into `assets/` instead.
+- **No analytics**, including the privacy-branded ones. They still make third-party requests.
+- **No embeds** &mdash; YouTube, X, Google Maps, Disqus. They set cookies and phone home.
+- **Ordinary hyperlinks are fine.** Linking to SSRN or Il Sole 24 Ore costs the visitor nothing until they click it.
+
+There is no cookie banner because there are no cookies to consent to. If any of the above ever changes, update the footer line on **both** pages to match. An inaccurate privacy claim is worse than no claim.
 
 ---
 
@@ -143,6 +174,8 @@ Keep these when making changes, or the two pages stop matching.
 - **Light and dark mode are both supported** via `prefers-color-scheme`. Check any color change in both.
 - **Breakpoints** are 720px (hero stacks), 560px (abstracts stop justifying) and 430px (job title hides in the top bar).
 - `<body class="outreach">` is an unused hook kept for page-specific styling.
+- **The footer privacy line sits on both pages** and must stay accurate. See Privacy above.
+- **Everything the browser loads comes from this repository.** No remote fonts, CDNs, analytics or embeds.
 
 ---
 
@@ -153,6 +186,7 @@ If you are Claude, Codex, or another agent asked to modify this site, follow the
 **Scope and stack**
 
 - Static HTML and CSS only. Do not add a build step, framework, bundler, package manager, or site generator. Do not add JavaScript unless explicitly asked.
+- **Do not introduce a third-party request.** No remote fonts, CDN links, analytics or embeds; vendor any new asset into `assets/`. Read the Privacy section first: the footer claims the site makes none, and that claim must remain true.
 - All asset paths are relative. Keep them relative so the site works at any address.
 - `index.html`, `style.css` and the `assets/` folder must keep their names and locations. GitHub Pages depends on `index.html` at the repository root.
 
