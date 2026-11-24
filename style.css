@@ -140,6 +140,9 @@ section h3:first-of-type { margin-top: 0; }
 .paper .status::before {
   content: "\00B7"; margin-right: 9px; color: var(--muted); font-weight: 400;
 }
+/* Short bold green notice after a title, e.g. "New version coming soon!" */
+.paper .news { color: var(--green); font-weight: 700; font-size: 0.9rem; margin-left: 9px; }
+.paper .news::before { content: "\00B7"; margin-right: 9px; color: var(--muted); font-weight: 400; }
 .paper .tags { margin-top: 6px; font-size: 0.85rem; line-height: 1.9; }
 .paper .tags > a { margin-right: 14px; text-decoration: underline; text-underline-offset: 2px; }
 
